@@ -82,11 +82,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function edit($id)
     {
-        //
-    }
+        $categories = Category::all();
+        $product = Product::findOrFail($id);
 
+        return view('products.edit-product', compact('categories', 'product'));
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -96,7 +99,30 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:225',
+            'description' => 'required|string|max:225',
+            'category_id' => 'required',
+            'price' => 'required',
+        ]);
+      
+        $input = $request->all();
+        
+        
+        if ($image = $request->file('image')) {
+            $destinationPath = 'images/';
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $profileImage);
+            $input['image'] = "$profileImage";
+        }else{
+            unset($input['image']);
+        }
+        
+        $product = Product::findOrFail($id);
+        $product->update($input);
+
+        return back()
+            ->with('status','Product updated!');
     }
 
     /**
@@ -107,6 +133,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return back()->with('status', 'Product delete!');
     }
 }

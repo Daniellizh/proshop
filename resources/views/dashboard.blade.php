@@ -13,8 +13,12 @@
                 <div class="card">
                     <h5 class="card-header">{{ $product->name }}</h5>
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a href="{{ route('edit-product', $product->id) }}" class="btn btn-primary">Edit</a>
+                        <form action="{{ route('delete-product', $product->id)}}" method="POST" style="display:inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </div>
                 @endforeach
