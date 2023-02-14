@@ -20,8 +20,8 @@ return new class extends Migration
                                 ->references('id')->on('categories')
                                 ->onDelete('cascade');
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->text('image')->nullable();
+            $table->text('description');
+            $table->string('image');
             $table->double('price')->default(0);
             $table->timestamps();
         });
